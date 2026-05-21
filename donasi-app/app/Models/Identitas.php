@@ -16,7 +16,8 @@ class Identitas extends Authenticatable
         'name',
         'gmail',
         'password',
-        'photo'
+        'photo',
+        'role'
     ];
 
     protected $hidden = [
