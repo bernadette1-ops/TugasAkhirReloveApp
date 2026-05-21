@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Donasi</title>
 
@@ -8,401 +9,311 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <script>
-    tailwind.config = {
-        theme: {
-            extend: {
-                colors: {
-                    primary: '#7f9cf5',
-                    primaryDark: '#667eea'
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#7f9cf5',
+                        primaryDark: '#667eea'
+                    }
                 }
             }
         }
-    }
     </script>
 </head>
 
 <body class="font-[Poppins] bg-white">
 
-<!-- NAVBAR -->
-<div class="flex justify-between items-center px-10 py-4 bg-white shadow">
+    <div class="flex justify-between items-center px-10 py-4 bg-white shadow sticky top-0 z-50">
 
-    <div class="flex items-center gap-3">
+        <div class="flex items-center gap-3">
+            <img src="{{ asset('pong.png') }}" class="w-10 h-10 rounded-xl object-cover">
+            <h1 class="font-semibold text-lg text-gray-800">Relove Cloth</h1>
+        </div>
 
-        <img src="{{ asset('pong.png') }}"
-             class="w-10 h-10 rounded-xl object-cover">
+        <div class="flex gap-4 items-center">
 
-        <h1 class="font-semibold text-lg text-gray-800">
-            Relove Cloth
-        </h1>
+            <a href="/dashboard"
+                class="flex flex-col items-center px-4 py-2 rounded-xl text-gray-600 hover:bg-[#7f9cf5]/10 hover:text-[#667eea]">
+                <img src="{{ asset('home.jpg') }}" class="w-6 h-6 mb-1">
+                <span class="text-xs">Home</span>
+            </a>
 
-    </div>
+            <a href="/donasi"
+                class="flex flex-col items-center px-4 py-2 rounded-xl bg-[#7f9cf5]/15 text-[#667eea] relative">
+                <img src="{{ asset('donasi.png') }}" class="w-6 h-6 mb-1">
+                <span class="text-xs font-medium">Donasi</span>
+                <div class="absolute -bottom-1 w-8 h-1 bg-[#7f9cf5] rounded-full"></div>
+            </a>
 
-    <div class="flex gap-6 text-sm items-center">
+            <div class="relative">
 
-        <a href="/dashboard"
-           class="hover:text-[#7f9cf5] transition text-gray-700">
-           Home
-        </a>
+                <button onclick="toggleNotifDropdown()"
+                    class="flex flex-col items-center text-gray-600 hover:text-[#667eea] relative">
 
-        <a href="/donasi"
-           class="text-[#7f9cf5] font-medium">
-           Donasi
-        </a>
+                    <img src="{{ asset('notif.png') }}" class="w-6 h-6 mb-1">
 
-        <a href="/service-center"
-           class="hover:text-[#7f9cf5] transition text-gray-700">
-           Service Center
-        </a>
+                    @if(count($notifDonasi) > 0)
+                        <span class="absolute top-0 right-2 w-2 h-2 bg-pink-500 rounded-full"></span>
+                    @endif
 
-        <a href="/profile"
-           class="hover:text-[#7f9cf5] transition text-gray-700">
-           Profile
-        </a>
-
-    </div>
-
-</div>
-
-<!-- HEADER -->
-<div class="relative h-[320px]">
-
-    <img src="{{ asset('d1.jpg') }}"
-         class="w-full h-full object-cover">
-
-    <div class="absolute inset-0 bg-gradient-to-r from-[#fbc2eb]/70 to-[#a6c1ee]/70 flex flex-col justify-center items-center text-center px-6">
-
-        <h1 class="text-4xl font-semibold text-gray-800 mb-4">
-            Form Donasi Pakaian
-        </h1>
-
-        <p class="max-w-2xl text-gray-700 leading-relaxed">
-            Isi form donasi dengan lengkap untuk membantu kami menyalurkan
-            pakaian kepada mereka yang membutuhkan.
-        </p>
-
-    </div>
-
-</div>
-
-<!-- CONTENT -->
-<div class="max-w-7xl mx-auto px-10 py-16">
-
-    <div class="grid md:grid-cols-2 gap-10 items-start">
-
-        <!-- FORM -->
-        <div class="bg-white rounded-3xl shadow-lg p-8 border border-gray-100">
-
-            <h2 class="text-2xl font-semibold text-gray-800 mb-6">
-                Tambah Donasi
-            </h2>
-
-            <form action="/donasi/store" method="POST" class="space-y-5">
-
-                @csrf
-
-                <div>
-                    <label class="text-sm font-medium text-gray-700">
-                        Barang yang ingin dikirim
-                    </label>
-
-                    <input type="text"
-                           name="barang"
-                           required
-                           class="w-full mt-2 px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#7f9cf5]">
-                </div>
-
-                <div>
-                    <label class="text-sm font-medium text-gray-700">
-                        Jumlah
-                    </label>
-
-                    <input type="number"
-                           name="jumlah"
-                           required
-                           class="w-full mt-2 px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#7f9cf5]">
-                </div>
-
-                <div>
-                    <label class="text-sm font-medium text-gray-700">
-                        Keterangan
-                    </label>
-
-                    <textarea name="keterangan"
-                              maxlength="100"
-                              required
-                              rows="5"
-                              class="w-full mt-2 px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#7f9cf5]"></textarea>
-                </div>
-
-                <input type="hidden"
-                       name="pengirim"
-                       value="{{ Auth::user()->name }}">
-
-                <button type="submit"
-                        class="w-full bg-[#7f9cf5] hover:bg-[#667eea] transition text-white py-3 rounded-xl font-medium shadow-md">
-
-                    Kirim Donasi
-
+                    <span class="text-xs">Notif</span>
                 </button>
 
-            </form>
+                <div id="notificationDropdown"
+                    class="hidden absolute right-0 mt-2 w-72 bg-white shadow-xl rounded-2xl border z-50">
 
-        </div>
+                    <div class="p-3 border-b text-sm font-semibold">
+                        Notifications
+                    </div>
 
-        <!-- INFO -->
-        <div class="bg-gradient-to-br from-[#fbc2eb]/30 to-[#a6c1ee]/30 rounded-3xl p-10 shadow-lg">
+                    <div class="p-3 text-xs text-gray-500">
 
-            <h2 class="text-3xl font-semibold text-gray-800 mb-5">
-                Kenapa Donasi Itu Penting?
-            </h2>
+                        @forelse($notifDonasi as $n)
 
-            <p class="text-gray-700 leading-relaxed mb-4">
-                Banyak pakaian yang masih layak pakai berakhir tidak digunakan.
-                Dengan berdonasi, kamu membantu orang lain mendapatkan kebutuhan
-                yang lebih layak.
-            </p>
+                            <a href="/donasi/tracking/{{ $n->kd_barang }}?read=1"
+                                class="block p-3 mb-2 rounded-lg bg-amber-50 hover:bg-amber-100 border-l-4 border-amber-400">
 
-            <p class="text-gray-700 leading-relaxed mb-4">
-                Relove Cloth membantu menyalurkan pakaian dengan lebih efektif
-                agar manfaatnya bisa dirasakan lebih luas.
-            </p>
-
-            <p class="text-gray-700 leading-relaxed">
-                Satu donasi kecil dapat memberikan dampak besar bagi sesama.
-            </p>
-
-            <img src="{{ asset('d2.jpg') }}"
-                 class="rounded-2xl mt-8 shadow-lg w-full h-72 object-cover">
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- TABLE -->
-<div class="px-10 pb-20">
-
-    <div class="bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100">
-
-        <div class="px-8 py-6 border-b border-gray-100">
-
-            <h2 class="text-2xl font-semibold text-gray-800">
-                Data Donasi
-            </h2>
-
-        </div>
-
-        <div class="overflow-x-auto">
-
-            <table class="w-full">
-
-                <thead class="bg-[#7f9cf5]/10">
-
-                    <tr>
-
-                        <th class="py-4 px-4 text-gray-700 text-sm font-semibold text-center">
-                            No
-                        </th>
-
-                        <th class="py-4 px-4 text-gray-700 text-sm font-semibold text-center">
-                            Pengirim
-                        </th>
-
-                        <th class="py-4 px-4 text-gray-700 text-sm font-semibold text-center">
-                            Barang
-                        </th>
-
-                        <th class="py-4 px-4 text-gray-700 text-sm font-semibold text-center">
-                            Jumlah
-                        </th>
-
-                        <th class="py-4 px-4 text-gray-700 text-sm font-semibold text-center">
-                            Keterangan
-                        </th>
-
-                        <th class="py-4 px-4 text-gray-700 text-sm font-semibold text-center">
-                            Action
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                    @foreach($donasi as $d)
-
-                    <tr class="border-b hover:bg-gray-50 transition">
-
-                        <td class="py-4 px-4 text-center">
-                            {{ $loop->iteration }}
-                        </td>
-
-                        <td class="py-4 px-4 text-center">
-                            {{ $d->pengirim }}
-                        </td>
-
-                        <td class="py-4 px-4 text-center font-medium text-gray-800">
-                            {{ $d->barang }}
-                        </td>
-
-                        <td class="py-4 px-4 text-center">
-                            {{ $d->jumlah }}
-                        </td>
-
-                        <td class="py-4 px-4 text-center text-gray-600">
-                            {{ $d->keterangan }}
-                        </td>
-
-                        <td class="py-4 px-4 text-center">
-
-                            @if($d->pengirim == Auth::user()->name)
-
-                                <div class="flex justify-center gap-2">
-
-                                    <button onclick="openEdit(
-                                        '{{ $d->kd_barang }}',
-                                        '{{ $d->barang }}',
-                                        '{{ $d->jumlah }}',
-                                        '{{ $d->keterangan }}'
-                                    )"
-                                    class="bg-[#7f9cf5] hover:bg-[#667eea] transition text-white px-4 py-2 rounded-lg text-sm">
-
-                                        Edit
-
-                                    </button>
-
-                                    <a href="/donasi/delete/{{ $d->kd_barang }}"
-                                       class="bg-red-400 hover:bg-red-500 transition text-white px-4 py-2 rounded-lg text-sm">
-
-                                       Delete
-
-                                    </a>
-
+                                📦 Donasi sedang dikirim
+                                <div class="text-[10px] text-gray-500 mt-1">
+                                    {{ $n->barang }} - {{ $n->jumlah }} pcs
                                 </div>
 
-                            @else
+                            </a>
 
-                                -
+                        @empty
+                            <div>Belum ada notifikasi</div>
+                        @endforelse
 
-                            @endif
+                    </div>
+                </div>
 
-                        </td>
+            </div>
 
-                    </tr>
+            <a href="/profile"
+                class="flex flex-col items-center px-4 py-2 rounded-xl text-gray-600 hover:bg-[#7f9cf5]/10 hover:text-[#667eea]">
+                <img src="{{ asset('profile.png') }}" class="w-6 h-6 mb-1 rounded-full">
+                <span class="text-xs">Profile</span>
+            </a>
 
-                    @endforeach
+        </div>
+    </div>
 
-                </tbody>
+    <div class="relative h-[420px]">
 
-            </table>
+        <img src="{{ asset('d1.jpg') }}" class="w-full h-full object-cover">
+
+        <div
+            class="absolute inset-0 bg-gradient-to-r from-[#fbc2eb]/70 to-[#a6c1ee]/70 flex flex-col justify-center items-center text-center px-6">
+
+            <h1 class="text-5xl font-semibold text-gray-800 mb-6">
+                Donasikan Pakaianmu
+            </h1>
+
+            <a href="/donasi_create"
+                class="bg-[#7f9cf5] hover:bg-[#667eea] text-white px-8 py-4 rounded-xl shadow-lg font-medium transition mb-6">
+                Mulai Berdonasi
+            </a>
 
         </div>
 
     </div>
 
-</div>
+    <div class="max-w-7xl mx-auto px-10 py-16">
 
-<!-- MODAL -->
-<div id="editModal"
-     class="hidden fixed inset-0 bg-black/50 justify-center items-center z-50">
+        <h2 class="text-3xl font-semibold text-gray-800 mb-10 text-center">
+            Donasi yang telah diberikan
+        </h2>
 
-    <div class="bg-white rounded-3xl p-8 w-[420px] shadow-2xl">
+        <div class="grid md:grid-cols-3 gap-8">
 
-        <h3 class="text-2xl font-semibold text-gray-800 mb-6">
-            Edit Donasi
-        </h3>
+            @foreach($donasi as $d)
 
-        <form id="editForm" method="POST" class="space-y-5">
+                    <div class="bg-white rounded-3xl shadow-lg p-6 hover:shadow-xl transition">
 
-            @csrf
+                        <a href="/donasi/{{ $d->kd_barang }}" class="block">
 
-            <div>
+                            <img src="{{ asset('donasi_img/' . $d->gambar) }}"
+                                class="rounded-2xl mb-5 w-full h-48 object-cover">
 
-                <label class="text-sm font-medium text-gray-700">
-                    Barang
-                </label>
+                            <h3 class="text-xl font-semibold text-gray-800">
+                                {{ $d->barang }}
+                            </h3>
 
-                <input type="text"
-                       name="barang"
-                       id="edit_barang"
-                       class="w-full mt-2 px-4 py-3 rounded-xl border border-gray-200 bg-gray-50">
+                            <p class="text-gray-600 mt-2">
+                                Jumlah: {{ $d->jumlah }}
+                            </p>
 
-            </div>
+                            <p class="text-sm font-semibold mt-2">
+                                Status :
+                                <span class="
+                                        px-3 py-1 rounded-full text-xs
+                                        {{ $d->status == 'pending'
+                ? 'bg-yellow-100 text-yellow-700'
+                : 'bg-green-100 text-green-700' }}">
+                                    {{ ucfirst($d->status ?? 'pending') }}
+                                </span>
+                            </p>
 
-            <div>
+                            <div class="mt-4 text-sm text-gray-400">
+                                Donatur: {{ $d->pengirim }}
+                            </div>
 
-                <label class="text-sm font-medium text-gray-700">
-                    Jumlah
-                </label>
+                        </a>
 
-                <input type="number"
-                       name="jumlah"
-                       id="edit_jumlah"
-                       class="w-full mt-2 px-4 py-3 rounded-xl border border-gray-200 bg-gray-50">
+                        @if(session('user') && $d->pengirim == session('user')['name'])
+                            <div class="flex gap-3 mt-5">
 
-            </div>
+                                <button onclick="openEdit(
+                                                        '{{ $d->kd_barang }}',
+                                                        '{{ $d->barang }}',
+                                                        '{{ $d->jumlah }}',
+                                                        '{{ $d->keterangan }}'
+                                                    )"
+                                    class="flex-1 bg-[#7f9cf5] hover:bg-[#667eea] text-white py-2 rounded-xl text-sm shadow-md">
 
-            <div>
+                                    Edit
+                                </button>
 
-                <label class="text-sm font-medium text-gray-700">
-                    Keterangan
-                </label>
+                                <a href="/donasi/delete/{{ $d->kd_barang }}"
+                                    class="flex-1 bg-red-400 hover:bg-red-500 text-white py-2 rounded-xl text-sm text-center shadow-md">
+                                    Delete
+                                </a>
 
-                <textarea name="keterangan"
-                          id="edit_keterangan"
-                          rows="4"
-                          class="w-full mt-2 px-4 py-3 rounded-xl border border-gray-200 bg-gray-50"></textarea>
+                            </div>
+                        @endif
 
-            </div>
+                    </div>
 
-            <button type="submit"
-                    class="w-full bg-[#7f9cf5] hover:bg-[#667eea] transition text-white py-3 rounded-xl">
+            @endforeach
 
-                Update
-
-            </button>
-
-        </form>
-
-        <button onclick="closeModal()"
-                class="w-full mt-3 bg-gray-200 hover:bg-gray-300 transition py-3 rounded-xl text-gray-700">
-
-            Cancel
-
-        </button>
+        </div>
 
     </div>
 
-</div>
+    <div id="editModal" class="hidden fixed inset-0 bg-black/50 justify-center items-center z-50">
 
-@if(session('success'))
-<script>
-    alert("{{ session('success') }}");
-</script>
-@endif
+        <div class="bg-white rounded-3xl p-8 w-[420px] shadow-2xl">
 
-<script>
-function openEdit(id, barang, jumlah, keterangan) {
+            <h3 class="text-2xl font-semibold text-gray-800 mb-6">
+                Edit Donasi
+            </h3>
 
-    document.getElementById('editModal').classList.remove('hidden');
-    document.getElementById('editModal').classList.add('flex');
+            <form id="editForm" method="POST" class="space-y-5">
+                @csrf
 
-    document.getElementById('edit_barang').value = barang;
-    document.getElementById('edit_jumlah').value = jumlah;
-    document.getElementById('edit_keterangan').value = keterangan;
+                <input type="text" name="barang" id="edit_barang" class="w-full px-4 py-3 rounded-xl border bg-gray-50">
 
-    document.getElementById('editForm').action = "/donasi/update/" + id;
-}
+                <input type="number" name="jumlah" id="edit_jumlah"
+                    class="w-full px-4 py-3 rounded-xl border bg-gray-50">
 
-function closeModal() {
+                <textarea name="keterangan" id="edit_keterangan" rows="4"
+                    class="w-full px-4 py-3 rounded-xl border bg-gray-50"></textarea>
 
-    document.getElementById('editModal').classList.remove('flex');
-    document.getElementById('editModal').classList.add('hidden');
+                <button type="submit" class="w-full bg-[#7f9cf5] hover:bg-[#667eea] text-white py-3 rounded-xl">
+                    Update
+                </button>
+            </form>
 
-}
-</script>
+            <button onclick="closeModal()" class="w-full mt-3 bg-gray-200 hover:bg-gray-300 py-3 rounded-xl">
+                Cancel
+            </button>
+
+        </div>
+
+    </div>
+
+    @if(session('success'))
+        <script>
+            alert("{{ session('success') }}");
+        </script>
+    @endif
+
+    <script>
+
+        function openEdit(id, barang, jumlah, keterangan) {
+
+            document.getElementById('editModal').classList.remove('hidden');
+            document.getElementById('editModal').classList.add('flex');
+
+            document.getElementById('edit_barang').value = barang;
+            document.getElementById('edit_jumlah').value = jumlah;
+            document.getElementById('edit_keterangan').value = keterangan;
+
+            document.getElementById('editForm').action = "/donasi/update/" + id;
+        }
+
+        function closeModal() {
+
+            document.getElementById('editModal').classList.remove('flex');
+            document.getElementById('editModal').classList.add('hidden');
+
+        }
+
+    </script>
+
+    <script>
+        function toggleNotifDropdown() {
+            const dropdown = document.getElementById('notificationDropdown');
+            dropdown.classList.toggle('hidden');
+
+            const badge = document.getElementById('notifBadge');
+            badge.classList.add('hidden');
+        }
+
+        function simulasiKirimDonasi() {
+            const listKonten = document.getElementById('notificationList');
+            const emptyNotif = document.getElementById('emptyNotif');
+            const badge = document.getElementById('notifBadge');
+
+            if (emptyNotif) emptyNotif.remove();
+
+            badge.classList.remove('hidden');
+
+            const idDonasi = 'RLV-' + Math.floor(1000 + Math.random() * 9000);
+            const idElemenNotif = 'item-' + idDonasi;
+
+            const notifBaru = `
+        <div id="${idElemenNotif}" class="p-4 transition duration-500 bg-amber-50" style="border-left: 4px solid #f59e0b;">
+            <p class="text-xs text-amber-700 font-bold">📦 Pakaian Sedang Dikirim</p>
+            <p class="text-xs text-gray-600 mt-1">Donasi <span class="font-bold text-gray-800">#${idDonasi}</span> kamu sedang dalam perjalanan kurir menuju lokasi.</p>
+            <span class="text-[10px] text-gray-400 block mt-2">Baru saja</span>
+        </div>
+    `;
+
+            listKonten.insertAdjacentHTML('afterbegin', notifBaru);
+            alert('Donasi dikirim! Coba cek menu "Notif" di navbar atas.');
+
+            setTimeout(() => {
+                const itemNotif = document.getElementById(idElemenNotif);
+                if (itemNotif) {
+                    itemNotif.className = "p-4 transition duration-500 bg-green-50";
+                    itemNotif.style.borderLeft = "4px solid #10b981";
+
+                    itemNotif.innerHTML = `
+                <p class="text-xs text-green-700 font-bold">✅ Donasi Telah Sampai!</p>
+                <p class="text-xs text-gray-600 mt-1">Alhamdulillah, paket pakaian kamu (<span class="font-semibold text-gray-800">#${idDonasi}</span>) sudah diterima oleh petugas Relove Cloth di posko.</p>
+                <div class="flex justify-between items-center mt-2">
+                    <span class="text-[10px] text-gray-400">Baru saja tiba</span>
+                    <a href="#" class="text-[10px] text-blue-600 font-medium hover:underline">Lihat Foto</a>
+                </div>
+            `;
+
+                    badge.classList.remove('hidden');
+                }
+            }, 7000);
+        }
+    </script>
+
+    <div class="mt-16 pt-8 border-t text-center text-sm text-gray-600 pb-10">
+        <p>
+            Apabila ada masalah, anda dapat menghubungi
+            <a href="{{ route('service.center') }}" class="text-[#667eea] font-semibold hover:underline">
+                Service Center
+            </a>
+        </p>
+    </div>
 
 </body>
+
 </html>
